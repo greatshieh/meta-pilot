@@ -1,0 +1,14 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+    $bg-color: (
+        '': #f8f9fa,
+        'page': #ffffff,
+        // 'overlay': rgba(0, 0, 0, 0.45)
+    ),
+    $text-color: (
+        'primary': #212529,
+        'regular': #343a40,
+        'secondary': #5c636a,
+        'placeholder': #adb5bd,
+        'disabled': #ced4da
+    )
+);

@@ -1,0 +1,9 @@
+html {
+    --better-scrollbar-thumb-bg-color: rgba(0, 0, 0, 0.3);
+    --bg-color-muted: #f6f8fa;
+}
+
+html.dark {
+    --better-scrollbar-thumb-bg-color: rgba(255, 255, 255, 0.3);
+    --bg-color-muted: #2e3033;
+}

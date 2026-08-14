@@ -1,0 +1,27 @@
+package system
+
+import "server/pkg/global"
+
+type SysApi struct {
+	global.MPA_MODEL
+	Path        string `json:"path" form:"path" gorm:"comment:api路径"`                      // api路径
+	Description string `json:"description" form:"description" gorm:"comment:api中文描述"`      // api中文描述
+	ApiGroup    string `json:"apiGroup" form:"apiGroup" gorm:"comment:api组"`               // api组
+	Method      string `json:"method" form:"method" gorm:"default:POST;comment:方法"`        // 方法:创建POST(默认)|查看GET|更新PUT|删除DELETE
+	Required    bool   `json:"required" form:"required" gorm:"default:false;comment:是否必选"` // 是否必选
+}
+
+func (SysApi) TableName() string {
+	return "sys_apis"
+}
+
+type SysIgnoreApi struct {
+	global.MPA_MODEL
+	Path   string `json:"path" gorm:"comment:api路径"`             // api路径
+	Method string `json:"method" gorm:"default:POST;comment:方法"` // 方法:创建POST(默认)|查看GET|更新PUT|删除DELETE
+	Flag   bool   `json:"flag" gorm:"-"`                         // 是否忽略
+}
+
+func (SysIgnoreApi) TableName() string {
+	return "sys_ignore_apis"
+}

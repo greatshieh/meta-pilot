@@ -1,0 +1,26 @@
+{
+    // 添加对 @types/node 的引用以解决类型定义问题
+    "extends": "@tsconfig/node20/tsconfig.json",
+    "include": [
+        "vite.config.*",
+        "vitest.config.*",
+        "cypress.config.*",
+        "nightwatch.conf.*",
+        "playwright.config.*",
+        "./**/*.ts",
+        "src/**/*.vue",
+        "src/**/*.d.ts"
+    ],
+    "compilerOptions": {
+        "composite": true,
+        "noEmit": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "types": ["vite/client", "node"],
+        "lib": ["DOM"],
+        "paths": {
+            "@/*": ["./src/*"]
+        }
+    }
+}

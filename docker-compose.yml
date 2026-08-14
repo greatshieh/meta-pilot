@@ -1,0 +1,102 @@
+volumes:
+  # 设置 mysql 持久化保存
+  db_vol:
+    #定义数据卷同步存放容器内mysql数据
+    # 设置 redis 持久化保存
+
+  redis_vol:
+    #定义数据卷同步存放redis数据
+
+networks:
+  nginx_network:
+    driver: bridge
+  redis_network:
+    driver: bridge
+  db_network:
+    driver: bridge
+  server_network:
+    driver: bridge
+
+services:
+  redis:
+    image: redis:latest
+    command: redis-server /etc/redis/redis.conf # 容器启动后启动redis服务器
+    volumes:
+      - redis_vol:/data # 通过挂载给redis数据备份
+      - ./deploy/redis/redis.conf:/etc/redis/redis.conf # 挂载redis配置文件
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - redis_network
+    restart: always # always表容器运行发生错误时一直重启
+
+  db:
+    image: mysql
+    env_file:
+      - ./deploy/mysql/.env # 使用了环境变量文件
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - db_network
+    volumes:
+      - db_vol:/var/lib/mysql:rw # 挂载数据库数据, 可读可写
+      - ./deploy/mysql/conf/my.cnf:/etc/mysql/my.cnf # 挂载配置文件
+      - ./deploy/mysql/init:/docker-entrypoint-initdb.d/ # 挂载数据初始化sql脚本
+    ports:
+      - "13306:3306" # 与配置文件保持一致
+    restart: always
+
+  web:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: report-web
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+    volumes:
+      - ./log:/var/log/nginx
+      - ./client/.docker-compose/nginx/ssl:/usr/share/nginx/ssl
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - server
+    command: [ "nginx-debug", "-g", "daemon off;" ]
+    networks:
+      - nginx_network
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: report-server
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./server/log:/src/log
+      - ./assets:/server/assets
+    restart: always
+    ports:
+      - 8888:8888
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+    networks:
+      - redis_network
+      - db_network
+      - nginx_network
+      - server_network

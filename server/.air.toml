@@ -1,0 +1,10 @@
+# root = "./cmd/apiserver/"
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/main ./cmd/apiserver/run.go"
+
+[cmd]
+runner = "dlv exec"
+after_cmd = ["echo 'Server is running at :3000'"]
+

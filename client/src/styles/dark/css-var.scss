@@ -1,0 +1,16 @@
+@forward 'element-plus/theme-chalk/src/dark/var.scss' with (
+    $bg-color: (
+        'page': #1c1e23,
+        '': #14161a,
+        // 'overlay': rgba(0, 0, 0, 0.4)
+    ),
+    $text-color: (
+        'primary': #e0e5ec,
+        'regular': #c5d0e6,
+        'secondary': #9fb4d1,
+        'placeholder': #6e8cb8,
+        'disabled': #4a5b7a
+    )
+);
+
+@use 'element-plus/theme-chalk/src/dark/css-vars.scss' as *;

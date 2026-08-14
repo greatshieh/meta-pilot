@@ -1,0 +1,6 @@
+export * as authorityApi from '@/api/method/authority'
+export * as menuApi from '@/api/method/menu'
+export * as sysUserApi from '@/api/method/sysuser'
+export * as apiApi from '@/api/method/api'
+export * as casbinApi from '@/api/method/casbin'
+export * as dashboardApi from '@/api/method/dashboard'
